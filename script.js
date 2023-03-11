@@ -98,16 +98,16 @@ base("playlist")
         // append the div element to the airtableItem div element created above
         drawerContent.append(drawerContentImageTable);
 
-        // create a div element for the record's description
+        // create an img element for the record's image
         let drawerContentImage = document.createElement("img");
-        // add a class to the description element
+        // add a class to the image element
         drawerContentImage.classList.add("drawer-content--image");
         // set the source of the record's image
         drawerContentImage.src = record.fields.cover_image[0].url;
-        // append the div element to the airtableItem div element created above
+        // append the img element to the image container element created above
         drawerContentImageTable.append(drawerContentImage);
 
-        // append the div element to the airtableItem div element created above
+        // append the drawer content element to the airtableItem div element created above
         airtableItem.append(drawerContent);
 
         // once all elements are created for this record,
@@ -139,16 +139,20 @@ base("playlist")
 
         // create the sort function
         function sortItems(e) {
-          // close all draws after sorting
-          document.querySelectorAll('.airtable-item.is-open').forEach(item => {
-            item.classList.remove('is-open')
-          })
+          // close all drawers after sorting
+          document
+            .querySelectorAll(".airtable-item.is-open")
+            .forEach((item) => {
+              item.classList.remove("is-open");
+            });
 
           // only sort through filtered items
           let filteredItems = Array.from(
             document.querySelectorAll(".airtable-item")
           );
           let sortedItems;
+
+          // NOTE: below is an example of sorting alphabetical values like titles
 
           // if toggle data-type == ascend (a-z)
           // if (e?.target.dataset.type == "ascend") {
@@ -167,9 +171,10 @@ base("playlist")
 
           // NOTE: below is an example of toggling numeric values like dates
 
+          // check current sort type and compare elements
           if (e?.target.dataset.type == "descend") {
             e?.target.setAttribute("data-type", "ascend");
-            e.target.innerHTML = 'NEWEST'
+            e.target.innerHTML = "NEWEST";
 
             sortedItems = filteredItems.sort(function (a, b) {
               return (
@@ -179,7 +184,7 @@ base("playlist")
             });
           } else {
             e?.target.setAttribute("data-type", "descend");
-            e.target.innerHTML = 'OLDEST'
+            e.target.innerHTML = "OLDEST";
 
             sortedItems = filteredItems.sort(function (a, b) {
               return (
@@ -194,6 +199,7 @@ base("playlist")
           );
         }
 
+        // attach event listener to sort toggle
         document
           .querySelector(".sort-toggle")
           .addEventListener("click", (e) => {
@@ -208,14 +214,16 @@ base("playlist")
         function filterItems(type, tag) {
           let filteredItems;
 
-          // close all draws after filtering
-          document.querySelectorAll('.airtable-item.is-open').forEach(item => {
-            item.classList.remove('is-open')
-          })
+          // close all drawers after filtering
+          document
+            .querySelectorAll(".airtable-item.is-open")
+            .forEach((item) => {
+              item.classList.remove("is-open");
+            });
 
           // filter items based on the type of the filter clicked
+          // if all is selected, reset items
           if (tag == "all") {
-            // if all is selected, reset items
             filteredItems = allItems;
           } else if (type == "location") {
             filteredItems = allItems.filter((item) =>
@@ -225,6 +233,8 @@ base("playlist")
 
           //clear the container to make way for filtered items
           container.innerHTML = "";
+
+          console.log('filteredItems', filteredItems);
 
           // loop through the filtered items and append them to the container
           filteredItems.forEach((item) => {
@@ -269,8 +279,8 @@ base("playlist")
             document
               .querySelectorAll(".filter-btn")
               .forEach((btn) => btn.classList.remove("is-active"));
-              // apply active state to selected filter
-            e.target.querySelector().classList.add("is-active");
+            // apply active state to selected filter
+            e.target.classList.add("is-active");
             filterItems("location", "all");
           });
       }
